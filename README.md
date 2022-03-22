@@ -30,6 +30,6 @@ Installation
 
 生成so檔 cc -fPIC -shared -o Hiwin_API.so Hiwin_API.c -lmodbus -I./
 
-`gcc -shared -Wl,-soname,`Hiwin_API`-o` Hiwin_API`.so -fPIC` Hiwin_API`.c`
+`gcc -shared -Wl,-soname,Hiwin_API-o Hiwin_API.so -fPIC Hiwin_API.c`
 
 執行 python3 Hiwin_API_test.py
