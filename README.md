@@ -10,9 +10,9 @@ Installation
 如需安裝最新版(請查閱)  [https://libmodbus.org/releases/](https://libmodbus.org/releases/)
 `libmodbus-3.0.5`->更換成新版本
 
-`$ wget http://libmodbus.org/site_media/build/libmodbus-3.1.7.tar.gz
+`$ wget http://libmodbus.org/site_media/build/libmodbus-3.1.7.tar.gz`
 
- $ sudo chmod 755 libmodbus-3.1.7.tar.gz`
+`$ sudo chmod 755 libmodbus-3.1.7.tar.gz`
  
 `$ tar zxvf libmodbus-3.1.7.tar.gz -C .`
 
