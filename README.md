@@ -12,7 +12,7 @@
 /************ P.S. ************/
 
 `libmodbus-3.1.7`->更換成新版本
-如需其他安裝版(請查閱)  [https://libmodbus.org/releases/](https://libmodbus.org/releases/)
+如需安裝其他版(請查閱)  [https://libmodbus.org/releases/](https://libmodbus.org/releases/)
 
 $ wget http://libmodbus.org/site_media/build/libmodbus-3.1.7.tar.gz
 $ sudo chmod 755 libmodbus-3.1.7.tar.gz
