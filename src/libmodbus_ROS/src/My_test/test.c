@@ -12,12 +12,27 @@
 
 #define REGISTERS_ADDRESS      201
 #define ROBOT_MOVE_STATE       524
-#define MOVE_STATE_LEN         1
+#define REGISTERS_LEN          1
 #define MAX_READ_REGISTERS     1
 
 modbus_t        *ctx;
 int             wrt;
 int             ret;
+uint16_t regs[MAX_READ_REGISTERS] = {0};
+
+void Holding_Registers_init(){
+    wrt = modbus_write_register(ctx, 201, 6);
+    wrt = modbus_write_register(ctx, 200, 0);
+}
+
+uint16_t READ_ARM_STATE(){
+    ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, REGISTERS_LEN, regs);
+    if (ret < 0) {
+        fprintf(stderr, "%s\n", modbus_strerror(errno));
+    } else {
+        return regs[0];
+    }
+}
 
 /************* Discrete Input *************/
     /*********************************
@@ -206,9 +221,8 @@ void JOG(int joint,int dir){
 
 int main(int argc, char *argv[])
 {
-    // int number = 0;
-
-    uint16_t regs[MAX_READ_REGISTERS] = {0};
+    int ii=0;
+    uint16_t ARM_STATE = 0;
 
     double PTP_Angle[6]={0, 0, 0, 0, -90, 90.83}; // ANGLE
     double PTP_XYZ[6]={204.049, 368, 293.5, 180, 0, 90}; // XYZABC
@@ -235,17 +249,66 @@ int main(int argc, char *argv[])
         modbus_free(ctx);
         return(-1);
     }
-    
-    // DO(300,1);
-    // DO(300,0);
+
+    // Holding_Registers_init();
+    // DO(301,1);
+    // DO(301,0);
     // HOME(1);
     // PTP(0, PTP_Angle, 10, 10, 1, 0); // PTP Jount
-    // PTP(1, PTP_XYZ, 50, 10, 1, 0);   // PTP Coordinate
+    // PTP(1, PTP_XYZ, 100, 10, 1, 0);   // PTP Coordinate
     // LIN(0, Angle, 10, 10, 1, 0); // PTP Jount
     // LIN(1, XYZ, 500, 30, 3, 7);  // LIN Coordinate
     // CIRC(CIRC_s, CIRC_end, 100, 50, 1, 0);
     // JOG(5,0);
+
+    while (1)
+    {
+
+        PTP(1, PTP_XYZ, 100, 10, 1, 0);
+        ARM_STATE = READ_ARM_STATE();
+
+        // ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, REGISTERS_LEN, regs);
+        // if (ret < 0) {
+        //     fprintf(stderr, "%s\n", modbus_strerror(errno));
+        // } else {
+        //     printf("INPUT REGISTERS:\n");
+        //     printf("[%d]=%d\n", ret-1, regs[ret-1]);
+        // }
+        printf("%d\n",ARM_STATE);
+
+        if(ARM_STATE == 1)
+        {
+            // printf("INPUT REGISTERS:\n");
+            // printf("[%d]=%d\n", ret-1, regs[ret-1]);
+            printf("%d\n",ARM_STATE);
+            break;
+        }
+    }
     
+    // printf("~~~~~~~~~~~\n");
+    // printf("%u",aa);
+    // printf("\n");
+
+    // while (1)
+    // {
+    //     ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, MOVE_STATE_LEN, regs);
+    //     wrt = modbus_write_register(ctx, 200, 1);
+    //     if (ret==1)
+    //     {
+    //         PTP(1, PTP_XYZ, 20, 10, 1, 0);
+    //         printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //         printf("\n");
+    //     }
+    //     if (ret==2)
+    //     {
+    //         // ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, MOVE_STATE_LEN, regs);
+    //         printf("%d",ret);
+    //         printf("\n");
+    //         printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    //         printf("\n");
+    //     }
+    // }
+
     // HOME(1);
     // while(1){
     // /**************************************/

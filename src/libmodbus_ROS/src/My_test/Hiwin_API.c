@@ -14,7 +14,7 @@
 
 #define REGISTERS_ADDRESS      201
 #define ROBOT_MOVE_STATE       524
-#define MOVE_STATE_LEN         1
+#define REGISTERS_LEN          1
 #define MAX_READ_REGISTERS     1
 // #define MODBUS_TIMEOUT_SEC     3
 // #define MODBUS_TIMEOUT_USEC    0
@@ -22,6 +22,7 @@
 modbus_t        *ctx;
 int             wrt;
 int             ret;
+uint16_t regs[MAX_READ_REGISTERS] = {0};
 
 void Holding_Registers_init(){
     wrt = modbus_write_register(ctx, 201, 6);
@@ -56,16 +57,22 @@ void Modbus_Close(){
     modbus_close(ctx);
 }
 
-int Arm_State_REGISTERS(){
-    uint16_t regs[MAX_READ_REGISTERS] = {0};
-    ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, MOVE_STATE_LEN, regs);
-    return ret;
+uint16_t Arm_State_REGISTERS(){
+    ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, REGISTERS_LEN, regs);
+    if (ret < 0) {
+        fprintf(stderr, "%s\n", modbus_strerror(errno));
+    } else {
+        return regs[0];
+    }
 }
 
-int Read_REGISTERS(int addr){
-    uint16_t regs[MAX_READ_REGISTERS] = {0};
-    ret = modbus_read_input_registers(ctx, addr, MOVE_STATE_LEN, regs);
-    return ret;
+uint16_t Read_REGISTERS(int addr){
+    ret = modbus_read_input_registers(ctx, addr, REGISTERS_LEN, regs);
+    if (ret < 0) {
+        fprintf(stderr, "%s\n", modbus_strerror(errno));
+    } else {
+        return regs[0];
+    }
 }
 
 /************* Discrete Input *************/

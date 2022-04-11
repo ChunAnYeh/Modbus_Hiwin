@@ -50,9 +50,10 @@ if __name__ == "__main__":
 
         # modbus.Holding_Registers_init()
         # modbus.HOME() # 1 RUN
-        # modbus.PTP(0, 200, 10, 1, 0, C_PTP_Angle)
+        modbus.PTP(1, 100, 10, 1, 0, C_PTP_XYZ)
         # modbus.DO(IO_Port,0) # 1 -> on ; 0 -> off
         if(modbus.Arm_State_REGISTERS() == 1):
+            print(modbus.Arm_State_REGISTERS())
             break
 
     modbus.Modbus_Close()
