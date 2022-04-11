@@ -10,9 +10,9 @@
 
 
 /************ P.S. ************/
+如需安裝其他版(請查閱)  [https://libmodbus.org/releases/](https://libmodbus.org/releases/)
 
 `libmodbus-3.1.7`->更換成新版本
-如需安裝其他版(請查閱)  [https://libmodbus.org/releases/](https://libmodbus.org/releases/)
 
 $ wget http://libmodbus.org/site_media/build/libmodbus-3.1.7.tar.gz
 
