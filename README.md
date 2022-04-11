@@ -1,11 +1,11 @@
 安裝最新版本 libmodbus5
 `$ sudo apt-get install libmodbus5 libmodbus-dev`
 
-編譯程式 cc -o Hiwin_API Hiwin_API.c -lmodbus -I./
+編譯程式 `cc -o Hiwin_API Hiwin_API.c -lmodbus -I./`
 
-生成so檔 cc -fPIC -shared -o Hiwin_API.so Hiwin_API.c -lmodbus -I./
+生成so檔 `cc -fPIC -shared -o Hiwin_API.so Hiwin_API.c -lmodbus -I./`
 
-執行 python3 Hiwin_API_test.py
+執行 `python3 Hiwin_API_test.py`
 
 
 
