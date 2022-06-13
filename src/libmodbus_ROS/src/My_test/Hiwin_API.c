@@ -14,14 +14,20 @@
 
 #define REGISTERS_ADDRESS      201
 #define ROBOT_MOVE_STATE       524
+// Read_REGISTERS
 #define REGISTERS_LEN          1
 #define MAX_READ_REGISTERS     1
+// DI
+#define MODBUS_DISCRETE_LEN    1
+#define DI_MAX_READ_REGISTERS  1
+
 // #define MODBUS_TIMEOUT_SEC     3
 // #define MODBUS_TIMEOUT_USEC    0
 
 modbus_t        *ctx;
 int             wrt;
-int             ret;
+int             ret,ii;
+uint8_t DI_regs[DI_MAX_READ_REGISTERS] = {0};
 uint16_t regs[MAX_READ_REGISTERS] = {0};
 
 void Holding_Registers_init(){
@@ -62,7 +68,11 @@ uint16_t Arm_State_REGISTERS(){
     if (ret < 0) {
         fprintf(stderr, "%s\n", modbus_strerror(errno));
     } else {
-        return regs[0];
+        printf("Arm_State_REGISTERS:\n");
+        for (ii=0; ii < ret; ii++) {
+            printf("[%d]=%d\n", ii, regs[ii]);
+        }
+        return regs[ii];
     }
 }
 
@@ -71,7 +81,11 @@ uint16_t Read_REGISTERS(int addr){
     if (ret < 0) {
         fprintf(stderr, "%s\n", modbus_strerror(errno));
     } else {
-        return regs[0];
+        printf("INPUT REGISTERS:\n");
+        for (ii=0; ii < ret; ii++) {
+            printf("[%d]=%d\n", ii, regs[ii]);
+        }
+        return regs[ii];
     }
 }
 
@@ -88,7 +102,7 @@ uint16_t Read_REGISTERS(int addr){
 
     /************* Coil *************/
     /*********************************
-                DI
+                SI
     value:0 ~ 255  -> DI[1] ~ [256]
         0 or 65280 -> R/W 
     ----------------------------------
@@ -96,6 +110,20 @@ uint16_t Read_REGISTERS(int addr){
     value:300 ~ 555 -> DO[1] ~ [256]
         0 or 65280  -> R/W 
     **********************************/
+
+uint8_t DI(int addr){
+    ret = modbus_read_input_bits(ctx, addr, REGISTERS_LEN, DI_regs);
+    if (ret < 0) {
+        fprintf(stderr, "%s\n", modbus_strerror(errno));
+    } else {
+        printf("DI DISCRETE:\n");
+        for (ii=0; ii < ret; ii++) {
+            printf("[%d]=%d\n", ii, DI_regs[ii]);
+        }
+        return DI_regs[ii];
+    }  
+}  
+
 void DO(int DO_Num, int x){
     wrt = modbus_write_bit(ctx, DO_Num, x);
     wrt = modbus_write_register(ctx, 200, 1);
