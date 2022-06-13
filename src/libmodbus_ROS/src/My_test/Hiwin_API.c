@@ -26,7 +26,7 @@
 
 modbus_t        *ctx;
 int             wrt;
-int             ret,ii;
+int             ret;
 uint8_t DI_regs[DI_MAX_READ_REGISTERS] = {0};
 uint16_t regs[MAX_READ_REGISTERS] = {0};
 
@@ -64,28 +64,30 @@ void Modbus_Close(){
 }
 
 uint16_t Arm_State_REGISTERS(){
+    int arm_state = 0;
     ret = modbus_read_input_registers(ctx, ROBOT_MOVE_STATE, REGISTERS_LEN, regs);
     if (ret < 0) {
         fprintf(stderr, "%s\n", modbus_strerror(errno));
     } else {
         printf("Arm_State_REGISTERS:\n");
-        for (ii=0; ii < ret; ii++) {
-            printf("[%d]=%d\n", ii, regs[ii]);
+        for (arm_state=0; arm_state < REGISTERS_LEN; arm_state++) {
+            printf("[%d]=%d\n", arm_state, regs[arm_state]);
+            return regs[0];
         }
-        return regs[ii];
     }
 }
 
 uint16_t Read_REGISTERS(int addr){
+    int regs_NUM = 0;
     ret = modbus_read_input_registers(ctx, addr, REGISTERS_LEN, regs);
     if (ret < 0) {
         fprintf(stderr, "%s\n", modbus_strerror(errno));
     } else {
         printf("INPUT REGISTERS:\n");
-        for (ii=0; ii < ret; ii++) {
-            printf("[%d]=%d\n", ii, regs[ii]);
+        for (regs_NUM=0; regs_NUM < REGISTERS_LEN; regs_NUM++) {
+            printf("[%d]=%d\n", regs_NUM, regs[regs_NUM]);
+            return regs[regs_NUM];
         }
-        return regs[ii];
     }
 }
 
@@ -112,16 +114,17 @@ uint16_t Read_REGISTERS(int addr){
     **********************************/
 
 uint8_t DI(int addr){
-    ret = modbus_read_input_bits(ctx, addr, REGISTERS_LEN, DI_regs);
+    int DI_NUM = 0;
+    ret = modbus_read_input_bits(ctx, addr, MODBUS_DISCRETE_LEN, DI_regs);
     if (ret < 0) {
         fprintf(stderr, "%s\n", modbus_strerror(errno));
     } else {
         printf("DI DISCRETE:\n");
-        for (ii=0; ii < ret; ii++) {
-            printf("[%d]=%d\n", ii, DI_regs[ii]);
+        for (DI_NUM=0; DI_NUM < MODBUS_DISCRETE_LEN; DI_NUM++) {
+            printf("[%d]=%d\n", DI_NUM, DI_regs[DI_NUM]);
+            return DI_regs[DI_NUM];
         }
-        return DI_regs[ii];
-    }  
+    }
 }  
 
 void DO(int DO_Num, int x){
